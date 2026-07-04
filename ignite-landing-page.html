@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IGNITE — The Complete Goal Achievement System</title>
+<meta name="description" content="A 7-day framework and a living Notion operating system for turning any goal into momentum that survives past day 3.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#0b0c1a;
+    --bg-mid:#150f27;
+    --bg-panel:#1c1533;
+    --line:rgba(255,255,255,0.09);
+    --ink:#f2eefb;
+    --ink-dim:#a9a0c4;
+    --ink-faint:#726a8f;
+    --ember-1:#ffb648;
+    --ember-2:#ff5f6d;
+    --ember-3:#ec4899;
+    --violet:#a855f7;
+    --display: 'Fraunces', serif;
+    --body: 'Inter', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--bg-deep); color:var(--ink);
+    font-family:var(--body); line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  img,svg{display:block; max-width:100%;}
+  a{color:inherit;}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 24px;}
+  @media (min-width:768px){ .wrap{padding:0 40px;} }
+
+  /* subtle ambient glow backdrop used behind several sections */
+  .glow-field{position:relative; overflow:hidden;}
+  .glow-field::before{
+    content:''; position:absolute; inset:-20% -20% auto -20%; height:70%;
+    background:radial-gradient(60% 60% at 30% 20%, rgba(168,85,247,0.16), transparent 70%),
+               radial-gradient(50% 50% at 80% 10%, rgba(236,72,153,0.10), transparent 70%);
+    pointer-events:none;
+  }
+
+  /* NAV */
+  header{position:sticky; top:0; z-index:40; backdrop-filter:blur(10px); background:rgba(11,12,26,0.75); border-bottom:1px solid var(--line);}
+  .nav{display:flex; align-items:center; justify-content:space-between; padding:16px 24px;}
+  @media (min-width:768px){ .nav{padding:18px 40px;} }
+  .logo{font-family:var(--mono); font-weight:600; letter-spacing:0.14em; font-size:14px; color:var(--ink);}
+  .logo span{color:var(--ember-2);}
+  .nav-cta{
+    font-family:var(--mono); font-size:12px; letter-spacing:0.06em; text-transform:uppercase;
+    background:linear-gradient(90deg,var(--ember-1),var(--ember-3));
+    color:#1a0e0a; padding:10px 18px; border-radius:999px; text-decoration:none; font-weight:600;
+    white-space:nowrap;
+  }
+
+  /* HERO */
+  .hero{padding:88px 0 64px; text-align:center;}
+  @media (min-width:768px){ .hero{padding:120px 0 90px;} }
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; letter-spacing:0.2em; text-transform:uppercase;
+    color:var(--ember-1); margin-bottom:22px; display:inline-block;
+  }
+  h1.headline{
+    font-family:var(--display); font-weight:600; font-size:clamp(40px,8vw,84px);
+    line-height:1.02; margin:0 0 26px; letter-spacing:-0.01em;
+  }
+  h1.headline em{
+    font-style:italic; font-weight:500;
+    background:linear-gradient(90deg,var(--ember-1),var(--ember-2) 55%,var(--ember-3));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .sub{font-size:18px; color:var(--ink-dim); max-width:560px; margin:0 auto 40px;}
+  @media (min-width:768px){ .sub{font-size:20px;} }
+  .cta-row{display:flex; flex-direction:column; align-items:center; gap:16px;}
+  .btn-primary{
+    font-family:var(--body); font-weight:600; font-size:17px;
+    background:linear-gradient(90deg,var(--ember-1),var(--ember-2) 60%,var(--ember-3));
+    color:#1a0e0a; padding:17px 34px; border-radius:12px; text-decoration:none; display:inline-block;
+    box-shadow:0 18px 40px -12px rgba(255,95,109,0.45); transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 22px 46px -10px rgba(255,95,109,0.55);}
+  .trust-row{
+    display:flex; flex-wrap:wrap; justify-content:center; gap:10px 22px; margin-top:6px;
+    font-family:var(--mono); font-size:11.5px; letter-spacing:0.04em; color:var(--ink-faint); text-transform:uppercase;
+  }
+  .trust-row span::before{content:'—'; margin-right:8px; color:var(--ink-faint);}
+
+  /* PROBLEM */
+  .problem{padding:70px 0; border-top:1px solid var(--line);}
+  .problem .wrap{max-width:720px;}
+  .problem p{font-size:19px; color:#d9d2ec; margin:0 0 20px;}
+  @media (min-width:768px){ .problem p{font-size:21px;} }
+  .problem strong{color:var(--ink);}
+  .problem .kicker{font-family:var(--mono); font-size:12px; letter-spacing:0.16em; color:var(--violet); text-transform:uppercase; margin-bottom:20px; display:block;}
+
+  /* FUSE — signature scroll element */
+  .fuse-section{padding:80px 0 60px; border-top:1px solid var(--line); position:relative;}
+  .fuse-heading{text-align:center; margin-bottom:64px;}
+  .fuse-heading h2{font-family:var(--display); font-weight:600; font-size:clamp(28px,5vw,44px); margin:0 0 12px;}
+  .fuse-heading p{color:var(--ink-dim); font-size:16px; max-width:480px; margin:0 auto;}
+  .fuse-track{position:relative; max-width:640px; margin:0 auto; padding-left:38px;}
+  .fuse-line{
+    position:absolute; left:11px; top:6px; bottom:6px; width:2px;
+    background:rgba(255,255,255,0.08); border-radius:2px; overflow:hidden;
+  }
+  .fuse-line-fill{
+    position:absolute; left:0; top:0; width:100%; height:0%;
+    background:linear-gradient(180deg,var(--ember-1),var(--ember-2),var(--ember-3));
+    transition:height 1.1s cubic-bezier(.2,.7,.2,1);
+    box-shadow:0 0 18px 2px rgba(255,95,109,0.55);
+  }
+  .fuse-day{position:relative; padding-bottom:44px; opacity:0.35; transform:translateX(-6px); transition:opacity .6s ease, transform .6s ease;}
+  .fuse-day:last-child{padding-bottom:0;}
+  .fuse-day.lit{opacity:1; transform:translateX(0);}
+  .fuse-dot{
+    position:absolute; left:-38px; top:2px; width:24px; height:24px; border-radius:50%;
+    background:var(--bg-panel); border:2px solid var(--ink-faint); display:flex; align-items:center; justify-content:center;
+    transition:border-color .5s ease, box-shadow .5s ease, background .5s ease;
+  }
+  .fuse-day.lit .fuse-dot{
+    border-color:var(--ember-2); background:radial-gradient(circle,var(--ember-1),var(--ember-3));
+    box-shadow:0 0 16px 3px rgba(255,95,109,0.6);
+  }
+  .fuse-tag{font-family:var(--mono); font-size:11px; letter-spacing:0.1em; color:var(--ink-faint); text-transform:uppercase;}
+  .fuse-day.lit .fuse-tag{color:var(--ember-1);}
+  .fuse-day h3{font-family:var(--display); font-size:22px; font-weight:600; margin:4px 0 6px;}
+  .fuse-day p{color:var(--ink-dim); font-size:15px; margin:0; max-width:420px;}
+
+  /* INCLUDED */
+  .included{padding:80px 0; border-top:1px solid var(--line);}
+  .included-heading{text-align:center; margin-bottom:48px;}
+  .included-heading h2{font-family:var(--display); font-weight:600; font-size:clamp(28px,5vw,42px); margin:0 0 10px;}
+  .included-heading p{color:var(--ink-dim); font-size:16px;}
+  .cards{display:grid; gap:22px; grid-template-columns:1fr;}
+  @media (min-width:760px){ .cards{grid-template-columns:1fr 1fr;} }
+  .card{
+    background:linear-gradient(160deg, var(--bg-panel), var(--bg-mid));
+    border:1px solid var(--line); border-radius:20px; padding:32px 28px;
+  }
+  .card .card-tag{font-family:var(--mono); font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--violet); margin-bottom:14px; display:block;}
+  .card h3{font-family:var(--display); font-size:26px; font-weight:600; margin:0 0 14px;}
+  .card ul{margin:0; padding-left:20px; color:var(--ink-dim); font-size:15px;}
+  .card li{margin-bottom:9px;}
+  .card li::marker{color:var(--ember-2);}
+
+  /* PRICE */
+  .price-section{padding:90px 0; border-top:1px solid var(--line);}
+  .price-card{
+    max-width:560px; margin:0 auto; text-align:center;
+    background:radial-gradient(120% 140% at 50% -10%, rgba(255,95,109,0.14), transparent 60%), var(--bg-panel);
+    border:1px solid rgba(255,182,72,0.25); border-radius:24px; padding:52px 32px;
+  }
+  .price-card .tag{font-family:var(--mono); font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:var(--ember-1); margin-bottom:18px; display:block;}
+  .price-row{display:flex; align-items:baseline; justify-content:center; gap:14px; margin-bottom:6px;}
+  .price-old{font-family:var(--mono); font-size:20px; color:var(--ink-faint); text-decoration:line-through;}
+  .price-new{font-family:var(--display); font-size:56px; font-weight:600;}
+  .price-note{color:var(--ink-dim); font-size:14px; margin-bottom:30px;}
+  .price-card ul{text-align:left; max-width:340px; margin:0 auto 34px; padding-left:20px; color:var(--ink-dim); font-size:15px;}
+  .price-card li{margin-bottom:10px;}
+  .price-card li::marker{color:var(--ember-2);}
+  .guarantee-line{font-size:13px; color:var(--ink-faint); margin-top:20px;}
+
+  /* EMAIL CAPTURE */
+  .capture{padding:80px 0; border-top:1px solid var(--line);}
+  .capture-box{
+    max-width:600px; margin:0 auto; text-align:center; background:var(--bg-mid);
+    border:1px solid var(--line); border-radius:20px; padding:44px 32px;
+  }
+  .capture-box h2{font-family:var(--display); font-size:clamp(24px,4vw,32px); font-weight:600; margin:0 0 12px;}
+  .capture-box p{color:var(--ink-dim); font-size:15px; margin:0 0 26px;}
+  .capture-form{display:flex; flex-direction:column; gap:12px; max-width:380px; margin:0 auto;}
+  @media (min-width:520px){ .capture-form{flex-direction:row;} }
+  .capture-form input[type=email]{
+    flex:1; font-family:var(--body); font-size:15px; padding:14px 16px; border-radius:10px;
+    border:1px solid var(--line); background:var(--bg-deep); color:var(--ink); outline:none;
+  }
+  .capture-form input[type=email]:focus{border-color:var(--ember-2);}
+  .capture-form button{
+    font-family:var(--body); font-weight:600; font-size:15px; padding:14px 22px; border-radius:10px; border:none;
+    background:linear-gradient(90deg,var(--ember-1),var(--ember-3)); color:#1a0e0a; cursor:pointer;
+  }
+  .capture-fineprint{font-size:12px; color:var(--ink-faint); margin-top:16px;}
+  .capture-status{font-size:14px; margin-top:16px; min-height:20px;}
+  .capture-status.ok{color:#8fe3a6;}
+  .capture-status.err{color:#ff8f8f;}
+  .subscriber-state{display:none;}
+  .subscriber-state.show{display:block;}
+  .capture-form.hide{display:none;}
+  .manage-link{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.04em; color:var(--ink-faint);
+    text-decoration:underline; cursor:pointer; background:none; border:none; margin-top:14px;
+  }
+
+  /* FAQ */
+  .faq{padding:80px 0; border-top:1px solid var(--line);}
+  .faq h2{font-family:var(--display); font-weight:600; font-size:clamp(28px,5vw,38px); text-align:center; margin:0 0 40px;}
+  .faq-list{max-width:680px; margin:0 auto;}
+  details{border-bottom:1px solid var(--line); padding:18px 0;}
+  summary{
+    font-family:var(--body); font-weight:600; font-size:16px; cursor:pointer; list-style:none;
+    display:flex; justify-content:space-between; align-items:center; gap:16px;
+  }
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:'+'; font-family:var(--mono); font-size:20px; color:var(--ember-1); flex-shrink:0;}
+  details[open] summary::after{content:'–';}
+  details p{color:var(--ink-dim); font-size:15px; margin:14px 0 0;}
+
+  /* FOOTER */
+  footer{padding:50px 0 70px; border-top:1px solid var(--line); text-align:center;}
+  footer .foot-logo{font-family:var(--mono); font-size:13px; letter-spacing:0.14em; color:var(--ink-faint); margin-bottom:14px;}
+  footer .foot-link{font-family:var(--body); font-weight:600; color:var(--ember-1); text-decoration:none; font-size:14px;}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .fuse-line-fill, .fuse-day, .btn-primary{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="logo">IGNITE<span>.</span></div>
+    <a class="nav-cta" href="https://vinyan.gumroad.com/l/esxmfr" target="_blank" rel="noopener">Get the System</a>
+  </div>
+</header>
+
+<section class="hero glow-field">
+  <div class="wrap">
+    <span class="eyebrow">The Complete Goal Achievement System</span>
+    <h1 class="headline">Stop starting over.<br>Start what <em>finishes</em>.</h1>
+    <p class="sub">A 7-day framework and a living Notion operating system, built for the exact moment your motivation runs out — because it will, and this is built to survive that anyway.</p>
+    <div class="cta-row">
+      <a class="btn-primary" href="https://vinyan.gumroad.com/l/esxmfr" target="_blank" rel="noopener">Get IGNITE — $97</a>
+      <div class="trust-row">
+        <span>One-time payment</span>
+        <span>Instant download</span>
+        <span>7-day guarantee</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="problem">
+  <div class="wrap">
+    <span class="kicker">Before you buy another planner</span>
+    <p>You are not undisciplined. You've proven that elsewhere in your life. What you don't have is a system built to survive a bad week — and every goal-setting method you've tried so far <strong>was never built to give you one.</strong></p>
+    <p>A free template gives you a blank page. IGNITE gives you the seven specific moves that turn a wish into evidence, one day at a time.</p>
+  </div>
+</section>
+
+<section class="fuse-section">
+  <div class="wrap">
+    <div class="fuse-heading">
+      <h2>Seven days. Seven fixes.</h2>
+      <p>Each day removes one specific, named reason goals die — in order, so the next day can build on it.</p>
+    </div>
+    <div class="fuse-track">
+      <div class="fuse-line"><div class="fuse-line-fill" id="fuseFill"></div></div>
+
+      <div class="fuse-day" data-day="1"><div class="fuse-dot"></div><span class="fuse-tag">Day 01 — Clarity</span><h3>Name the real goal</h3><p>Turn a vague feeling into one sentence specific enough that a stranger could tell if you succeeded.</p></div>
+
+      <div class="fuse-day" data-day="2"><div class="fuse-dot"></div><span class="fuse-tag">Day 02 — Reason</span><h3>Find the fuel</h3><p>Dig past the socially acceptable reason to the one strong enough to survive a bad day.</p></div>
+
+      <div class="fuse-day" data-day="3"><div class="fuse-dot"></div><span class="fuse-tag">Day 03 — Obstacle Map</span><h3>Kill it before it kills you</h3><p>Name your specific obstacles in advance, while you're calm, not when you're already tired.</p></div>
+
+      <div class="fuse-day" data-day="4"><div class="fuse-dot"></div><span class="fuse-tag">Day 04 — Tiny Plan</span><h3>Shrink to the one-percent path</h3><p>Build a plan small enough to survive the ordinary, unmotivated days — because most days are ordinary.</p></div>
+
+      <div class="fuse-day" data-day="5"><div class="fuse-dot"></div><span class="fuse-tag">Day 05 — Environment</span><h3>Make the goal inevitable</h3><p>Rig your surroundings so the helpful choice becomes the easy, obvious one.</p></div>
+
+      <div class="fuse-day" data-day="6"><div class="fuse-dot"></div><span class="fuse-tag">Day 06 — Momentum</span><h3>Push the first domino</h3><p>Take the first real action before anything else optional gets your attention today.</p></div>
+
+      <div class="fuse-day" data-day="7"><div class="fuse-dot"></div><span class="fuse-tag">Day 07 — Evidence</span><h3>Prove it to yourself</h3><p>Turn one week into proof — the strongest motivator there is — and carry it into day 30.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="included glow-field">
+  <div class="wrap">
+    <div class="included-heading">
+      <h2>Everything in the system</h2>
+      <p>The reasoning, and the place it actually lives day to day.</p>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <span class="card-tag">📕 The Ebook</span>
+        <h3>IGNITE, the book</h3>
+        <ul>
+          <li>The full 7-day framework with a guided worksheet for every day</li>
+          <li>The "when motivation disappears" troubleshooting field guide</li>
+          <li>The 30-day follow-through plan</li>
+          <li>Designed to work fully on paper — no apps required</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="card-tag">🗂️ The Notion Tracker</span>
+        <h3>IGNITE, the system</h3>
+        <ul>
+          <li>Live dashboard mirroring the 7-day structure</li>
+          <li>Momentum log with streak tracking</li>
+          <li>Obstacle &amp; if-then log that grows with you</li>
+          <li>30-day tracker, duplicable for every future goal</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="price-section">
+  <div class="wrap">
+    <div class="price-card">
+      <span class="tag">Complete System</span>
+      <div class="price-row">
+        <span class="price-old">$134</span>
+        <span class="price-new">$97</span>
+      </div>
+      <p class="price-note">One-time payment · both pieces, forever</p>
+      <ul>
+        <li>The IGNITE Ebook (PDF) — $67 value</li>
+        <li>The IGNITE Notion Tracker — $67 value</li>
+        <li>Free updates to both, for life</li>
+      </ul>
+      <a class="btn-primary" href="https://vinyan.gumroad.com/l/esxmfr" target="_blank" rel="noopener">Get the Complete System</a>
+      <p class="guarantee-line">Do the first 7 days. If it didn't help you build real momentum, message me and I'll refund it — no forms, no hoops.</p>
+    </div>
+  </div>
+</section>
+
+<section class="capture">
+  <div class="wrap">
+    <div class="capture-box">
+      <div id="captureDefault">
+        <h2>Not ready yet? Get Day 1 free.</h2>
+        <p>I'll send you the Clarity worksheet from Day 1 — no charge, so you can feel the framework before you buy the system.</p>
+        <form class="capture-form" id="mcForm">
+          <input type="email" id="mcEmail" placeholder="you@email.com" required>
+          <button type="submit">Send it to me</button>
+        </form>
+        <div class="capture-status" id="captureStatus"></div>
+        <p class="capture-fineprint">One email. Unsubscribe anytime.</p>
+      </div>
+      <div class="subscriber-state" id="subscriberState">
+        <h2>You're on the list 🔥</h2>
+        <p>Day 1 is on its way to <strong id="subscriberEmail"></strong>. Check your inbox in the next few minutes.</p>
+        <button class="manage-link" id="forgetBtn">Not you? Forget this device</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="faq">
+  <div class="wrap">
+    <h2>Questions</h2>
+    <div class="faq-list">
+      <details>
+        <summary>Why $97 for an ebook and a Notion template?</summary>
+        <p>Because it's not one document — it's a full framework, four built components in the book, and a five-part Notion operating system. Priced for what it replaces: a coach, a course, and a planner you'd otherwise buy separately.</p>
+      </details>
+      <details>
+        <summary>Do I need Notion to use this?</summary>
+        <p>No. The ebook works completely on its own, on paper. The Notion Tracker is for people who want a living, digital version of the same system.</p>
+      </details>
+      <details>
+        <summary>Is this a subscription?</summary>
+        <p>No. One-time purchase, both pieces yours forever, free updates included.</p>
+      </details>
+      <details>
+        <summary>What if it doesn't work for me?</summary>
+        <p>Do the first 7 days. If it genuinely didn't help you build momentum, message me directly and I'll refund it — no forms, no hoops.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-logo">VINYAN STUDIO</div>
+    <a class="foot-link" href="https://vinyan.gumroad.com/l/esxmfr" target="_blank" rel="noopener">Get IGNITE — $97 →</a>
+  </div>
+</footer>
+
+<script>
+  // ---- Signature fuse: scroll-triggered ember trail ----
+  (function(){
+    var days = Array.from(document.querySelectorAll('.fuse-day'));
+    var fill = document.getElementById('fuseFill');
+    var track = document.querySelector('.fuse-track');
+
+    function updateFuse(){
+      var litCount = days.filter(function(d){ return d.classList.contains('lit'); }).length;
+      var pct = days.length ? (litCount / days.length) * 100 : 0;
+      fill.style.height = pct + '%';
+    }
+
+    if('IntersectionObserver' in window){
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(entry.isIntersecting){ entry.target.classList.add('lit'); updateFuse(); }
+        });
+      }, { threshold: 0.5, rootMargin: '0px 0px -10% 0px' });
+      days.forEach(function(d){ io.observe(d); });
+    } else {
+      days.forEach(function(d){ d.classList.add('lit'); });
+      updateFuse();
+    }
+  })();
+
+  // ---- Browser-based subscriber management (localStorage) ----
+  // NOTE FOR VINYAN: this remembers the subscriber on THIS device/browser only.
+  // The actual email delivery still goes through Mailchimp below — localStorage
+  // just controls what this page shows a returning visitor. Replace the
+  // MAILCHIMP_ACTION_URL and the u / id hidden field values with your real
+  // Mailchimp embedded-form values before publishing.
+  (function(){
+    var STORAGE_KEY = 'ignite_subscriber_v1';
+    var form = document.getElementById('mcForm');
+    var emailInput = document.getElementById('mcEmail');
+    var statusEl = document.getElementById('captureStatus');
+    var defaultBlock = document.getElementById('captureDefault');
+    var subscriberBlock = document.getElementById('subscriberState');
+    var subscriberEmailEl = document.getElementById('subscriberEmail');
+    var forgetBtn = document.getElementById('forgetBtn');
+
+    // Replace with your real Mailchimp embedded-form action URL (the JSONP pattern
+    // Vinyan Studio already uses on other landing pages — avoids CORS issues).
+    var MAILCHIMP_ACTION_URL = 'https://YOUR-SUBDOMAIN.list-manage.com/subscribe/post-json?u=YOUR_U&id=YOUR_ID';
+
+    function getSubscriber(){
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch(e){ return null; }
+    }
+
+    function setSubscriber(email){
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ email: email, subscribedAt: Date.now() }));
+      } catch(e){ /* localStorage unavailable — form still works, just won't persist state */ }
+    }
+
+    function forgetSubscriber(){
+      try { localStorage.removeItem(STORAGE_KEY); } catch(e){}
+      renderState();
+    }
+
+    function renderState(){
+      var sub = getSubscriber();
+      if(sub && sub.email){
+        defaultBlock.style.display = 'none';
+        subscriberBlock.classList.add('show');
+        subscriberEmailEl.textContent = sub.email;
+      } else {
+        defaultBlock.style.display = '';
+        subscriberBlock.classList.remove('show');
+      }
+    }
+
+    function jsonpSubmit(email){
+      return new Promise(function(resolve, reject){
+        var callbackName = 'mcCallback_' + Date.now();
+        var script = document.createElement('script');
+        var url = MAILCHIMP_ACTION_URL.replace('/post?', '/post-json?').replace('/post-json?', '/post-json?') +
+                   '&EMAIL=' + encodeURIComponent(email) + '&c=' + callbackName;
+
+        window[callbackName] = function(data){
+          delete window[callbackName];
+          document.body.removeChild(script);
+          if(data && data.result === 'success'){ resolve(data); }
+          else { reject(data); }
+        };
+
+        script.src = url;
+        script.onerror = function(){
+          delete window[callbackName];
+          reject(new Error('network error'));
+        };
+        document.body.appendChild(script);
+      });
+    }
+
+    if(form){
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        var email = emailInput.value.trim();
+        if(!email) return;
+
+        statusEl.textContent = 'Sending...';
+        statusEl.className = 'capture-status';
+
+        jsonpSubmit(email).then(function(){
+          setSubscriber(email);
+          statusEl.textContent = '';
+          renderState();
+        }).catch(function(){
+          // Even if Mailchimp isn't wired up yet, don't leave the visitor stuck —
+          // but be honest that this is a local-only confirmation until it's connected.
+          statusEl.textContent = 'Could not confirm with the mailing list right now. Please try again shortly.';
+          statusEl.className = 'capture-status err';
+        });
+      });
+    }
+
+    if(forgetBtn){
+      forgetBtn.addEventListener('click', forgetSubscriber);
+    }
+
+    renderState();
+  })();
+</script>
+
+</body>
+</html>
